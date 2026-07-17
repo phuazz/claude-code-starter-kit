@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sample Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+/* Tokens — copied verbatim from design.md. Do not invent new values here. */
+:root {
+  --bg: #fafaf8; --bg2: #ffffff; --bg3: #f5f5f0; --bg4: #eeeee8; --bg-hover: #f0f0ea;
+  --bd: #e2e0d8; --bd2: #d5d3ca; --bd-strong: #c0beb5;
+  --t1: #1a1a18; --t2: #5c5c56; --t3: #8a8a82; --t4: #b0b0a8;
+  --g: #1a8754; --g2: #22a366; --g-bg: rgba(26,135,84,0.07);
+  --r: #c0392b; --r2: #e74c3c; --r-bg: rgba(192,57,43,0.07);
+  --b: #2563eb; --b2: #3b82f6; --b-bg: rgba(37,99,235,0.06);
+  --a: #b45309; --a-bg: rgba(180,83,9,0.07);
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'DM Sans', -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', 'Menlo', monospace;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --radius: 8px; --radius-lg: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--t1); font-family:var(--sans); line-height:1.5; -webkit-font-smoothing:antialiased; }
+.shell { max-width:1520px; margin:0 auto; padding:20px 32px 60px; }
+
+.masthead { padding:28px 0 22px; border-bottom:2px solid var(--t1); display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px; }
+.masthead h1 { font-family:var(--serif); font-size:32px; font-weight:400; letter-spacing:-0.5px; }
+.masthead h1 em { font-style:italic; color:var(--t3); }
+.pills { display:flex; gap:8px; }
+.pill { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; padding:4px 10px; border-radius:100px; }
+.pill-live { background:var(--g-bg); color:var(--g); border:1px solid rgba(26,135,84,0.2); }
+.pill-date { background:var(--bg3); color:var(--t2); border:1px solid var(--bd); font-family:var(--mono); letter-spacing:0; }
+
+.label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--t3); }
+
+.kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--bd); border:1px solid var(--bd); border-radius:var(--radius-lg); overflow:hidden; margin:24px 0; }
+.kpi { background:var(--bg2); padding:18px 20px; }
+.kpi-val { font-family:var(--mono); font-size:24px; font-weight:700; letter-spacing:-0.5px; margin-top:6px; }
+.kpi-delta { font-family:var(--mono); font-size:12px; font-weight:600; margin-top:2px; }
+.pos { color:var(--g); } .neg { color:var(--r); }
+
+.card { background:var(--bg2); border:1px solid var(--bd); border-radius:var(--radius-lg); box-shadow:var(--shadow); margin-bottom:24px; }
+.card-head { padding:14px 20px; border-bottom:1px solid var(--bd); }
+.card-head .label { color:var(--t2); }
+.card-body { padding:16px 20px; }
+
+table { width:100%; border-collapse:collapse; }
+th { background:var(--bg3); border-bottom:2px solid var(--bd2); padding:10px 20px; text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--t3); }
+th.num, td.num { text-align:right; font-family:var(--mono); }
+td { padding:10px 20px; border-bottom:1px solid var(--bd); font-size:13px; }
+tbody tr:hover { background:var(--bg-hover); }
+tbody tr:last-child td { border-bottom:none; }
+
+footer { margin-top:32px; padding-top:16px; border-top:1px solid var(--bd); font-size:12px; color:var(--t3); }
+
+@media (max-width:1200px) { .kpi-strip { grid-template-columns:repeat(2,1fr); } }
+@media (max-width:768px) { .shell { padding:16px 18px 40px; } .masthead h1 { font-size:24px; } }
+@media (max-width:480px) { .kpi-strip { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="masthead">
+    <h1 id="title">Sample Dashboard <em id="subtitle"></em></h1>
+    <div class="pills">
+      <span class="pill pill-live">Live</span>
+      <span class="pill pill-date" id="updated">—</span>
+    </div>
+  </div>
+
+  <div class="kpi-strip" id="kpis"></div>
+
+  <div class="card">
+    <div class="card-head"><span class="label">Visits &amp; Signups — last 12 months</span></div>
+    <div class="card-body"><div id="chart" style="height:340px;"></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><span class="label">By channel</span></div>
+    <table>
+      <thead><tr><th>Channel</th><th class="num">Visits</th><th class="num">Signups</th><th class="num">Rate %</th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <footer id="source"></footer>
+</div>
+
+<script>
+/* ---------------------------------------------------------------------------
+   DATA BOOTSTRAP — the one clever bit in this file.
+
+   pipeline.py replaces the line below with the real data inlined, so the built
+   docs/index.html is a single self-contained file that needs no server.
+   Left as-is (i.e. empty), the page falls back to fetching data/metrics.json,
+   so `npx serve .` works during development without running a build.
+
+   Keep this pattern. It is what lets you develop fast and ship standalone.
+--------------------------------------------------------------------------- */
+const PRELOADED_DATA = {"meta":{"title":"Sample Dashboard","subtitle":"a worked example","last_updated":"2026-07-17","source":"Made-up numbers. Replace with yours."},"kpis":[{"label":"Total Visits","value":"48,210","delta":12.4},{"label":"Signups","value":"1,904","delta":8.1},{"label":"Conversion","value":"3.95%","delta":-0.4},{"label":"Revenue","value":"$82,400","delta":-3.2}],"series":{"dates":["2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04","2026-05","2026-06","2026-07"],"visits":[31200,33100,32400,35800,39200,37600,40100,42800,41500,44900,46300,48210],"signups":[1210,1305,1288,1402,1560,1495,1618,1702,1665,1780,1841,1904]},"table":[{"channel":"Organic search","visits":21400,"signups":892,"rate":4.17},{"channel":"Direct","visits":12800,"signups":501,"rate":3.91},{"channel":"Referral","visits":8100,"signups":340,"rate":4.2},{"channel":"Social","visits":5910,"signups":171,"rate":2.89}]};
+
+async function loadData() {
+  if (Object.keys(PRELOADED_DATA).length) return PRELOADED_DATA;
+  const res = await fetch('data/metrics.json');
+  if (!res.ok) throw new Error('Could not load data/metrics.json — run `npx serve .` from the project root.');
+  return res.json();
+}
+
+const CHART_LAYOUT = {
+  paper_bgcolor: 'transparent',
+  plot_bgcolor: '#fafaf8',
+  font: { family: 'DM Sans', size: 10, color: '#5c5c56' },
+  margin: { t: 10, b: 30, l: 55, r: 55 },
+  xaxis: { gridcolor: '#eeeee8', linecolor: '#d5d3ca', linewidth: 1, showgrid: false, tickfont: { size: 9 } },
+  yaxis: { title: { text: 'Visits', font: { size: 10 } }, gridcolor: '#f0f0ea', linecolor: '#d5d3ca', linewidth: 1, showgrid: true, tickfont: { size: 9, family: 'JetBrains Mono' } },
+  yaxis2: { title: { text: 'Signups', font: { size: 10 } }, overlaying: 'y', side: 'right', showgrid: false, linecolor: '#d5d3ca', tickfont: { size: 9, family: 'JetBrains Mono' } },
+  showlegend: true,
+  legend: { x: 0, y: 1.08, orientation: 'h', font: { size: 9 }, bgcolor: 'transparent' },
+  hovermode: 'x unified',
+  hoverlabel: { bgcolor: '#fff', bordercolor: '#d5d3ca', font: { size: 10, family: 'DM Sans' } }
+};
+
+const fmt = n => n.toLocaleString('en-US');
+const sign = n => (n > 0 ? '+' : '') + n.toFixed(1) + '%';
+
+function render(d) {
+  document.getElementById('title').firstChild.textContent = d.meta.title + ' ';
+  document.getElementById('subtitle').textContent = d.meta.subtitle;
+  document.getElementById('updated').textContent = d.meta.last_updated;
+  document.getElementById('source').textContent = 'Source: ' + d.meta.source;
+  document.title = d.meta.title;
+
+  document.getElementById('kpis').innerHTML = d.kpis.map(k => `
+    <div class="kpi">
+      <div class="label">${k.label}</div>
+      <div class="kpi-val">${k.value}</div>
+      <div class="kpi-delta ${k.delta >= 0 ? 'pos' : 'neg'}">${sign(k.delta)}</div>
+    </div>`).join('');
+
+  document.getElementById('tbody').innerHTML = d.table.map(r => `
+    <tr>
+      <td>${r.channel}</td>
+      <td class="num">${fmt(r.visits)}</td>
+      <td class="num">${fmt(r.signups)}</td>
+      <td class="num">${r.rate.toFixed(2)}</td>
+    </tr>`).join('');
+
+  Plotly.newPlot('chart', [
+    { x: d.series.dates, y: d.series.visits, name: 'Visits', type: 'scatter', mode: 'lines',
+      line: { color: '#2563eb', width: 2 }, fill: 'tozeroy', fillcolor: 'rgba(37,99,235,0.06)' },
+    { x: d.series.dates, y: d.series.signups, name: 'Signups', type: 'scatter', mode: 'lines',
+      yaxis: 'y2', line: { color: '#1a8754', width: 2 } }
+  ], CHART_LAYOUT, { responsive: true, displayModeBar: false });
+}
+
+loadData().then(render).catch(err => {
+  document.getElementById('kpis').innerHTML =
+    `<div class="kpi" style="grid-column:1/-1"><div class="label neg">Error</div><div>${err.message}</div></div>`;
+});
+</script>
+</body>
+</html>

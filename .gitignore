@@ -1,0 +1,20 @@
+# Never commit secrets. If a key ever lands in git history, it is compromised
+# even after you delete it — rotate it rather than trying to scrub the history.
+.env
+.env.*
+*.key
+secrets/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node
+node_modules/
+
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini

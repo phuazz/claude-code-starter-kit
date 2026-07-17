@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "title": "Sample Dashboard",
+    "subtitle": "a worked example",
+    "last_updated": "2026-07-17",
+    "source": "Made-up numbers. Replace with yours."
+  },
+  "kpis": [
+    { "label": "Total Visits", "value": "48,210", "delta": 12.4 },
+    { "label": "Signups", "value": "1,904", "delta": 8.1 },
+    { "label": "Conversion", "value": "3.95%", "delta": -0.4 },
+    { "label": "Revenue", "value": "$82,400", "delta": -3.2 }
+  ],
+  "series": {
+    "dates": ["2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07"],
+    "visits": [31200, 33100, 32400, 35800, 39200, 37600, 40100, 42800, 41500, 44900, 46300, 48210],
+    "signups": [1210, 1305, 1288, 1402, 1560, 1495, 1618, 1702, 1665, 1780, 1841, 1904]
+  },
+  "table": [
+    { "channel": "Organic search", "visits": 21400, "signups": 892, "rate": 4.17 },
+    { "channel": "Direct", "visits": 12800, "signups": 501, "rate": 3.91 },
+    { "channel": "Referral", "visits": 8100, "signups": 340, "rate": 4.20 },
+    { "channel": "Social", "visits": 5910, "signups": 171, "rate": 2.89 }
+  ]
+}
