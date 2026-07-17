@@ -53,7 +53,7 @@ project_name/
 ├── template.html          # Source. Small. The only HTML edited by hand.
 ├── data/                  # JSON data files
 ├── scripts/
-│   └── pipeline.py        # Injects data into template.html → writes docs/index.html
+│   └── pipeline.py        # Injects data into template.html → writes the built page
 ├── docs/
 │   └── index.html         # Generated output. Never edited by hand. Often very large.
 └── README.md              # What this is, how to build it, what is broken
@@ -66,7 +66,7 @@ project_name/
 
 These are the guardrails. Write them as rules so they bind automatically, rather than as things you must remember to say.
 
-- **NEVER open `docs/index.html` or any generated output larger than 500KB.** It wastes the session. Work on `template.html` instead.
+- **NEVER open generated output larger than 500KB** (the built page in `docs/`). It wastes the session. Work on `template.html` instead. Name the generated file explicitly here so there is no ambiguity about which files in `docs/` are generated and which are hand-written.
 - **Check file size before opening anything unfamiliar.** Over 200KB, stop and ask me to point you at the source file.
 - **For files over 200KB, use `grep -n` to locate lines, view narrow line ranges, and patch with targeted replacements.** Never read the whole file into context.
 - **Pattern consistency.** When fixing a pattern, apply the fix to every instance of that pattern, and audit for others before calling it done. Scope narrowly only when I ask for that explicitly.

@@ -1,4 +1,4 @@
-"""Build script: template.html + data/*.json -> docs/index.html
+"""Build script: template.html + data/*.json -> docs/demo.html
 
 Run from the project root:
 
@@ -11,6 +11,12 @@ so there is no server, no framework, and nothing to keep running.
 
 The template keeps a fetch fallback, so it also works un-built during
 development. This script only ever produces the shippable version.
+
+Note on naming: in this kit docs/index.html is the hand-written guide, so the
+generated page is docs/demo.html. In a normal project you would have no guide
+and the build would write docs/index.html. Generated and hand-written pages
+coexist in docs/ quite happily; just be clear which is which, because you never
+hand-edit a generated one.
 """
 
 from datetime import date  # Python months are 1-indexed
@@ -22,7 +28,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 TEMPLATE = ROOT / "template.html"
 DATA = ROOT / "data" / "metrics.json"
 OUT_DIR = ROOT / "docs"
-OUT = OUT_DIR / "index.html"
+OUT = OUT_DIR / "demo.html"   # index.html is the hand-written guide — never overwrite it
 
 # The exact line in template.html that gets replaced. If you edit the template,
 # keep this line byte-identical or the build will fail loudly (which is the point).

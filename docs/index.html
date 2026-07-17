@@ -3,162 +3,364 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sample Dashboard</title>
+<title>Claude Code Starter Kit — Build and publish things, free</title>
+<meta name="description" content="A working starter kit for building and publishing dashboards with Claude Code and GitHub Pages. Four installs, one working example, and the scaffolding that makes it scale.">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <style>
-/* Tokens — copied verbatim from design.md. Do not invent new values here. */
+/* Tokens — verbatim from design.md. */
 :root {
-  --bg: #fafaf8; --bg2: #ffffff; --bg3: #f5f5f0; --bg4: #eeeee8; --bg-hover: #f0f0ea;
-  --bd: #e2e0d8; --bd2: #d5d3ca; --bd-strong: #c0beb5;
-  --t1: #1a1a18; --t2: #5c5c56; --t3: #8a8a82; --t4: #b0b0a8;
-  --g: #1a8754; --g2: #22a366; --g-bg: rgba(26,135,84,0.07);
-  --r: #c0392b; --r2: #e74c3c; --r-bg: rgba(192,57,43,0.07);
-  --b: #2563eb; --b2: #3b82f6; --b-bg: rgba(37,99,235,0.06);
-  --a: #b45309; --a-bg: rgba(180,83,9,0.07);
-  --serif: 'Instrument Serif', Georgia, serif;
-  --sans: 'DM Sans', -apple-system, sans-serif;
-  --mono: 'JetBrains Mono', 'SF Mono', 'Menlo', monospace;
-  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --radius: 8px; --radius-lg: 12px;
+  --bg:#fafaf8; --bg2:#ffffff; --bg3:#f5f5f0; --bg4:#eeeee8; --bg-hover:#f0f0ea;
+  --bd:#e2e0d8; --bd2:#d5d3ca; --bd-strong:#c0beb5;
+  --t1:#1a1a18; --t2:#5c5c56; --t3:#8a8a82; --t4:#b0b0a8;
+  --g:#1a8754; --g-bg:rgba(26,135,84,0.07);
+  --r:#c0392b; --r-bg:rgba(192,57,43,0.07);
+  --b:#2563eb; --b-bg:rgba(37,99,235,0.06);
+  --a:#b45309; --a-bg:rgba(180,83,9,0.07);
+  --serif:'Instrument Serif',Georgia,serif;
+  --sans:'DM Sans',-apple-system,sans-serif;
+  --mono:'JetBrains Mono','SF Mono','Menlo',monospace;
+  --shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
+  --radius:8px; --radius-lg:12px;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { background:var(--bg); color:var(--t1); font-family:var(--sans); line-height:1.5; -webkit-font-smoothing:antialiased; }
-.shell { max-width:1520px; margin:0 auto; padding:20px 32px 60px; }
+body { background:var(--bg); color:var(--t1); font-family:var(--sans); line-height:1.65; -webkit-font-smoothing:antialiased; }
+.shell { max-width:820px; margin:0 auto; padding:20px 32px 80px; }
 
 .masthead { padding:28px 0 22px; border-bottom:2px solid var(--t1); display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px; }
-.masthead h1 { font-family:var(--serif); font-size:32px; font-weight:400; letter-spacing:-0.5px; }
+.masthead h1 { font-family:var(--serif); font-size:34px; font-weight:400; letter-spacing:-0.5px; line-height:1.15; }
 .masthead h1 em { font-style:italic; color:var(--t3); }
-.pills { display:flex; gap:8px; }
-.pill { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; padding:4px 10px; border-radius:100px; }
-.pill-live { background:var(--g-bg); color:var(--g); border:1px solid rgba(26,135,84,0.2); }
-.pill-date { background:var(--bg3); color:var(--t2); border:1px solid var(--bd); font-family:var(--mono); letter-spacing:0; }
+.pills { display:flex; gap:8px; flex-wrap:wrap; }
+.pill { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; padding:5px 11px; border-radius:100px; text-decoration:none; border:1px solid var(--bd); background:var(--bg3); color:var(--t2); transition:background .12s; }
+.pill:hover { background:var(--bg-hover); }
+.pill-live { background:var(--g-bg); color:var(--g); border-color:rgba(26,135,84,0.2); }
 
-.label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--t3); }
+.lede { font-size:18px; color:var(--t2); margin:24px 0 8px; }
+.lede strong { color:var(--t1); font-weight:600; }
 
-.kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--bd); border:1px solid var(--bd); border-radius:var(--radius-lg); overflow:hidden; margin:24px 0; }
-.kpi { background:var(--bg2); padding:18px 20px; }
-.kpi-val { font-family:var(--mono); font-size:24px; font-weight:700; letter-spacing:-0.5px; margin-top:6px; }
-.kpi-delta { font-family:var(--mono); font-size:12px; font-weight:600; margin-top:2px; }
-.pos { color:var(--g); } .neg { color:var(--r); }
+h2 { font-family:var(--serif); font-size:26px; font-weight:400; letter-spacing:-0.3px; margin:48px 0 4px; padding-top:20px; border-top:1px solid var(--bd); }
+h2 .num { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--t4); display:block; letter-spacing:1px; margin-bottom:2px; }
+h3 { font-size:15px; font-weight:700; margin:26px 0 6px; letter-spacing:-0.1px; }
+p { margin:12px 0; color:var(--t2); }
+p strong, li strong { color:var(--t1); font-weight:600; }
+ul, ol { margin:12px 0 12px 22px; color:var(--t2); }
+li { margin:6px 0; }
+a { color:var(--b); text-decoration:underline; text-underline-offset:2px; text-decoration-thickness:1px; }
 
-.card { background:var(--bg2); border:1px solid var(--bd); border-radius:var(--radius-lg); box-shadow:var(--shadow); margin-bottom:24px; }
-.card-head { padding:14px 20px; border-bottom:1px solid var(--bd); }
-.card-head .label { color:var(--t2); }
-.card-body { padding:16px 20px; }
+code { font-family:var(--mono); font-size:0.88em; background:var(--bg3); border:1px solid var(--bd); border-radius:4px; padding:1px 5px; color:var(--t1); }
+pre { position:relative; background:var(--bg2); border:1px solid var(--bd); border-radius:var(--radius); padding:14px 16px; margin:12px 0; overflow-x:auto; box-shadow:var(--shadow); }
+pre code { background:none; border:none; padding:0; font-size:12.5px; line-height:1.7; display:block; white-space:pre; }
+.copy { position:absolute; top:8px; right:8px; font-family:var(--sans); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--t3); background:var(--bg3); border:1px solid var(--bd); border-radius:100px; padding:3px 9px; cursor:pointer; opacity:0; transition:opacity .12s,color .12s; }
+pre:hover .copy { opacity:1; }
+.copy:hover { color:var(--t1); }
+.copy.done { color:var(--g); border-color:rgba(26,135,84,0.3); background:var(--g-bg); opacity:1; }
 
-table { width:100%; border-collapse:collapse; }
-th { background:var(--bg3); border-bottom:2px solid var(--bd2); padding:10px 20px; text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--t3); }
-th.num, td.num { text-align:right; font-family:var(--mono); }
-td { padding:10px 20px; border-bottom:1px solid var(--bd); font-size:13px; }
+.callout { border-left:3px solid var(--a); background:var(--a-bg); border-radius:0 var(--radius) var(--radius) 0; padding:12px 16px; margin:16px 0; }
+.callout .label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--a); }
+.callout p { margin:4px 0 0; color:var(--t2); font-size:14px; }
+.callout.key { border-left-color:var(--g); background:var(--g-bg); }
+.callout.key .label { color:var(--g); }
+
+.step { display:grid; grid-template-columns:34px 1fr; gap:14px; margin:24px 0; }
+.step-n { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--t1); background:var(--bg3); border:1px solid var(--bd); border-radius:100px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; }
+.step h3 { margin-top:2px; }
+
+.arch { font-family:var(--mono); font-size:12px; line-height:1.9; background:var(--bg2); border:1px solid var(--bd); border-radius:var(--radius); padding:14px 16px; margin:16px 0; overflow-x:auto; }
+.arch .c { color:var(--t3); }
+
+table { width:100%; border-collapse:collapse; margin:16px 0; }
+th { background:var(--bg3); border-bottom:2px solid var(--bd2); padding:9px 12px; text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--t3); }
+td { padding:9px 12px; border-bottom:1px solid var(--bd); font-size:13.5px; color:var(--t2); vertical-align:top; }
+td:first-child { font-family:var(--mono); font-size:12px; color:var(--t1); white-space:nowrap; }
 tbody tr:hover { background:var(--bg-hover); }
-tbody tr:last-child td { border-bottom:none; }
 
-footer { margin-top:32px; padding-top:16px; border-top:1px solid var(--bd); font-size:12px; color:var(--t3); }
+.demo-card { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; background:var(--bg2); border:1px solid var(--bd); border-radius:var(--radius-lg); box-shadow:var(--shadow); padding:18px 20px; margin:20px 0; }
+.demo-card p { margin:2px 0 0; font-size:13.5px; }
+.btn { display:inline-block; background:var(--t1); color:var(--bg2); text-decoration:none; font-size:12px; font-weight:600; letter-spacing:0.3px; padding:9px 16px; border-radius:100px; white-space:nowrap; }
+.btn:hover { background:#000; }
+.btn-2 { background:var(--bg3); color:var(--t1); border:1px solid var(--bd2); }
+.btn-2:hover { background:var(--bg-hover); }
 
-@media (max-width:1200px) { .kpi-strip { grid-template-columns:repeat(2,1fr); } }
-@media (max-width:768px) { .shell { padding:16px 18px 40px; } .masthead h1 { font-size:24px; } }
-@media (max-width:480px) { .kpi-strip { grid-template-columns:1fr; } }
+footer { margin-top:56px; padding-top:16px; border-top:1px solid var(--bd); font-size:12.5px; color:var(--t3); }
+footer a { color:var(--t2); }
+
+@media (max-width:768px) {
+  .shell { padding:16px 18px 50px; }
+  .masthead h1 { font-size:26px; }
+  h2 { font-size:22px; }
+  .copy { opacity:1; }
+}
 </style>
 </head>
 <body>
 <div class="shell">
+
   <div class="masthead">
-    <h1 id="title">Sample Dashboard <em id="subtitle"></em></h1>
+    <h1>Claude Code Starter Kit <em>build it, ship it, free</em></h1>
     <div class="pills">
-      <span class="pill pill-live">Live</span>
-      <span class="pill pill-date" id="updated">—</span>
+      <a class="pill pill-live" href="demo.html">Live demo</a>
+      <a class="pill" href="https://github.com/phuazz/claude-code-starter-kit">Repo</a>
     </div>
   </div>
 
-  <div class="kpi-strip" id="kpis"></div>
+  <p class="lede">Everything below is one working example: a dashboard that builds from a template and a JSON file, and publishes itself to the web for <strong>free</strong>, forever, with no server. Follow it top to bottom and you will have your own live page in about half an hour.</p>
 
-  <div class="card">
-    <div class="card-head"><span class="label">Visits &amp; Signups — last 12 months</span></div>
-    <div class="card-body"><div id="chart" style="height:340px;"></div></div>
+  <p>You do not need to be a programmer. You do need to be willing to type commands you do not fully understand yet — that part is normal and it passes.</p>
+
+  <div class="demo-card">
+    <div>
+      <strong>See the finished thing first</strong>
+      <p>This is what the kit builds and publishes. Get here, then make it yours.</p>
+    </div>
+    <a class="btn" href="demo.html">Open the demo →</a>
   </div>
 
-  <div class="card">
-    <div class="card-head"><span class="label">By channel</span></div>
-    <table>
-      <thead><tr><th>Channel</th><th class="num">Visits</th><th class="num">Signups</th><th class="num">Rate %</th></tr></thead>
-      <tbody id="tbody"></tbody>
-    </table>
+  <!-- ============================================================ -->
+  <h2><span class="num">PART 1</span>Install these four things</h2>
+
+  <p>In order. Each takes a few minutes. You do not need to understand them yet — install now, understand later.</p>
+
+  <div class="step">
+    <div class="step-n">1</div>
+    <div>
+      <h3>Git — the undo button</h3>
+      <p>Tracks every version of your files, so you can never permanently break anything.</p>
+      <ul>
+        <li><strong>Windows:</strong> <a href="https://git-scm.com/download/win">git-scm.com/download/win</a> — accept every default.</li>
+        <li><strong>Mac:</strong> open Terminal and run <code>xcode-select --install</code>.</li>
+      </ul>
+      <p>Then open a terminal — Windows: search for <strong>Git Bash</strong>; Mac: <strong>Terminal</strong> — and check it worked:</p>
+      <pre><code>git --version</code></pre>
+      <p>Then tell Git who you are, once, forever:</p>
+      <pre><code>git config --global user.name "Your Name"
+git config --global user.email "your@email.com"</code></pre>
+    </div>
   </div>
 
-  <footer id="source"></footer>
+  <div class="step">
+    <div class="step-n">2</div>
+    <div>
+      <h3>Python — runs the build</h3>
+      <p>Turns your template plus your data into the finished page. Download from <a href="https://www.python.org/downloads/">python.org/downloads</a>.</p>
+      <div class="callout">
+        <div class="label">Windows — the one box everybody misses</div>
+        <p>Tick <strong>“Add Python to PATH”</strong> on the very first installer screen. Skipping it causes every <code>python is not recognised</code> error you will hit later. If you missed it, re-run the installer and choose “Modify”.</p>
+      </div>
+      <pre><code>python --version</code></pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n">3</div>
+    <div>
+      <h3>Node.js — local preview</h3>
+      <p>You need it for exactly one command: a local web server, so you can look at your page before publishing it. Get the <strong>LTS</strong> version from <a href="https://nodejs.org/">nodejs.org</a>.</p>
+      <pre><code>node --version</code></pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n">4</div>
+    <div>
+      <h3>Claude Code — does the work</h3>
+      <p>Needs a Claude account on a paid plan (Pro or Max). Then:</p>
+      <pre><code>npm install -g @anthropic-ai/claude-code</code></pre>
+      <p>Start it, and sign in when prompted:</p>
+      <pre><code>claude</code></pre>
+      <div class="callout">
+        <div class="label">This matters more than it looks</div>
+        <p>Claude Code only sees the folder you launched it from, and everything underneath. Always <code>cd</code> into your project folder <em>first</em>, then run <code>claude</code>. Type <code>/exit</code> to leave.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>And one account: GitHub</h3>
+  <p>Not an install, but you need it. Sign up free at <a href="https://github.com">github.com</a>. This is where your code lives and where your finished pages get hosted, at no cost.</p>
+
+  <!-- ============================================================ -->
+  <h2><span class="num">PART 2</span>Run it</h2>
+
+  <pre><code>git clone https://github.com/phuazz/claude-code-starter-kit.git
+cd claude-code-starter-kit
+python scripts/pipeline.py
+npx serve docs</code></pre>
+
+  <p>Open the URL it prints — usually <code>http://localhost:3000</code> — and click through to the demo. You just built the same page you saw above, on your own machine.</p>
+
+  <p>Now look at <em>what actually happened</em>, because this is the whole architecture:</p>
+
+  <table>
+    <thead><tr><th>File</th><th>What it is</th></tr></thead>
+    <tbody>
+      <tr><td>template.html</td><td><strong>The source.</strong> Small, and the only HTML you ever edit by hand.</td></tr>
+      <tr><td>data/metrics.json</td><td><strong>The data.</strong> Plain numbers, no code.</td></tr>
+      <tr><td>scripts/pipeline.py</td><td><strong>The build.</strong> Injects the data into the template and writes the result.</td></tr>
+      <tr><td>docs/demo.html</td><td><strong>The output.</strong> Generated. Never edit it. It can be huge — nobody reads it.</td></tr>
+    </tbody>
+  </table>
+
+  <p>That split is why this stays cheap to maintain. Change the look, edit the template. Change the numbers, edit the JSON. The two never fight, and you can regenerate the output at any time from the other two.</p>
+
+  <div class="callout key">
+    <div class="label">The habit to build</div>
+    <p>Edit → <code>python scripts/pipeline.py</code> → look. That loop is the entire job. Everything else is detail. Start by changing a number in <code>data/metrics.json</code> and watching the page move.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2><span class="num">PART 3</span>Publish it free</h2>
+
+  <ol>
+    <li>Create a new repository on GitHub. Do not add a README when it offers.</li>
+    <li>Push your folder to it — GitHub shows you the exact URL after you create the repo:</li>
+  </ol>
+
+  <pre><code>git remote add origin https://github.com/&lt;you&gt;/&lt;repo&gt;.git
+git add -A
+git commit -m "Initial commit"
+git push -u origin main</code></pre>
+
+  <p>If Git says the remote already exists (because you cloned this rather than starting fresh), point it at yours instead:</p>
+
+  <pre><code>git remote set-url origin https://github.com/&lt;you&gt;/&lt;repo&gt;.git</code></pre>
+
+  <ol start="3">
+    <li>On GitHub: <strong>Settings → Pages → Source: Deploy from a branch → Branch <code>main</code>, folder <code>/docs</code> → Save.</strong></li>
+    <li>Wait a minute. Your page is live at <code>https://&lt;you&gt;.github.io/&lt;repo&gt;/</code>.</li>
+  </ol>
+
+  <p>That is it. Every push updates the page. Free, permanent, no server. The page you are reading right now is hosted exactly this way.</p>
+
+  <p>The kit also ships a GitHub Action (<code>.github/workflows/build.yml</code>) that reruns the build for you on every push and once a week. Once that works, add a step that fetches fresh data before the build and your page updates itself forever, without you touching it.</p>
+
+  <!-- ============================================================ -->
+  <h2><span class="num">PART 4</span>The actual method</h2>
+
+  <p>Everything above is plumbing. This part is why it keeps working after week one, and it is the part people skip.</p>
+
+  <div class="callout key">
+    <div class="label">The whole idea in one line</div>
+    <p>The productivity does not come from clever prompting. It comes from <strong>four files that mean you never explain yourself twice.</strong></p>
+  </div>
+
+  <p>Claude Code reads these automatically at the start of every session, so it begins already knowing your rules instead of guessing at them.</p>
+
+  <div class="arch">
+    <div>CLAUDE.md           <span class="c">— your standing rules</span></div>
+    <div>PROMPT_TEMPLATE.md  <span class="c">— how to ask for work</span></div>
+    <div>KICKOFF_TEMPLATE.md <span class="c">— how to start something new</span></div>
+    <div>design.md           <span class="c">— how it should look</span></div>
+  </div>
+
+  <h3>CLAUDE.md — your standing rules</h3>
+  <p>Read automatically at the start of every session in that folder or any folder inside it. This is where you write down what you would otherwise repeat in every conversation: how you want writing to sound, what your build command is, what Claude must never do.</p>
+  <p>The single highest-value line in mine is a guardrail: <em>never open generated output larger than 500KB.</em> Generated files are enormous, and one accidental read wastes the whole session.</p>
+  <p><strong>Write your guardrails as rules, not as reminders you have to remember to give.</strong> That is the difference between a setup that scales and one that does not.</p>
+  <div class="callout">
+    <div class="label">How to grow it — do not write it up front</div>
+    <p>Start nearly empty. Add a rule <strong>the moment you catch yourself correcting Claude twice on the same thing.</strong> That is the only trigger you need. Mine reached a couple of hundred lines over months without me ever sitting down to write it.</p>
+  </div>
+
+  <h3>PROMPT_TEMPLATE.md — how to ask for work</h3>
+  <p>A good prompt looks like a well-scoped engineering ticket, not a spell. Context, constraints, success criteria, output format. Everything else is decoration. Use this for most things:</p>
+  <pre><code>Project: &lt;name&gt;. Stage: &lt;bug fix | new feature | tweak&gt;.
+Change: &lt;what should be different&gt;.
+Must: &lt;the non-negotiables&gt;.
+Show me the plan before you start.</code></pre>
+  <p>That last line does more than all the rest combined. It costs one turn and catches a misunderstanding while it is still cheap to fix.</p>
+
+  <p>What to leave out entirely — all decoration, none of it helps:</p>
+  <ul>
+    <li>Personas — <em>“you are a world-class engineer”</em></li>
+    <li>Stakes and incentives — <em>“this is critical”, “I will tip you $200”</em></li>
+    <li>Emotional framing — <em>“take a deep breath”</em></li>
+    <li>Vague adjectives with no checklist — <em>“rigorous”, “thorough”</em></li>
+  </ul>
+  <p>The test: <strong>if a phrase does not change what a correct output would look like, it is decoration.</strong> Replace adjectives with checklists — “rigorous review” becomes the three specific things rigour means here.</p>
+
+  <h3>KICKOFF_TEMPLATE.md — how to start something new</h3>
+  <p>The best trick in the kit. When you have a goal but not a spec, do not describe it badly and hope. <strong>Make Claude interview you.</strong> You end up with a better-specified project than you would have written alone, because answering a pointed question is far easier than imagining the whole thing up front.</p>
+  <pre><code>We are starting a new &lt;build | tool | dashboard&gt; at &lt;path&gt;.
+I have the goal but not a full spec. Before proposing any code or plan,
+interview me to scope it — ONE question at a time, waiting for my answer
+before the next.
+
+Cover, in roughly this order, and stop asking once an item is settled:
+- Objective: the one decision or output this must produce.
+- Users: who looks at this, and what they do differently as a result.
+- Data: what goes in, where from, what shape, how often it changes.
+- Success criteria: must-haves, nice-to-haves, out of scope.
+- Constraints: anything that must not break.
+- Failure modes: the three ways this could be silently wrong, and the
+  guard for each.
+
+Ask only what you cannot reasonably infer. Where you can infer, state the
+assumption and move on. Do not write code during the interview. When the
+spec is settled, output the completed prompt template and a multi-turn
+plan, then stop and wait for my go-ahead. Push back if any answer looks
+wrong. Read README.md and CLAUDE.md in this folder first.</code></pre>
+  <p>Two clauses make this work, and both are easy to drop. <strong>“ONE question at a time”</strong> — without it you get twenty questions in a wall of text and answer none of them properly. <strong>“Do not write code… then stop and wait”</strong> — without it, enthusiasm takes over and you are reviewing an implementation of the wrong thing.</p>
+
+  <h3>design.md — how it should look</h3>
+  <p>One file with your colours, fonts, and layout rules. Reference it in a prompt — <em>“style per design.md”</em> — and everything you build looks like it came from the same place, without you art-directing anything. Copy the token block into each project rather than inventing new values.</p>
+  <p>One rule keeps it alive: <strong>if you need a value the system does not have, add it there first, then use it.</strong> The moment one project invents its own blue, the system is dead.</p>
+
+  <!-- ============================================================ -->
+  <h2><span class="num">PART 5</span>Habits that matter more than they look</h2>
+
+  <p><strong>Let it work, then check it.</strong> Claude Code writes the file, runs the build, and reads the error. Your job is to check the output and push back — not to supervise each keystroke. Ask for a plan on anything non-trivial; let the small stuff run.</p>
+
+  <p><strong>Commit constantly.</strong> <code>git commit</code> after every working change. It is your undo button. Nothing you do is scary if the last good version is one command away.</p>
+
+  <p><strong>Every project gets a README.</strong> What it is, how to build it, where the data comes from, what is broken. This is what you read when you come back in three months having forgotten everything — and it is the first thing Claude reads too. One file, two audiences.</p>
+
+  <p><strong>Push back.</strong> When the output looks wrong, say so plainly. <em>“That is wrong because X”</em> gets a fix; <em>“hmm, not quite”</em> gets a shuffle.</p>
+
+  <p><strong>Iterate across turns.</strong> Do not try to one-shot the perfect prompt. Nobody writes it first time, and trying to is slower than correcting a draft.</p>
+
+  <!-- ============================================================ -->
+  <h2><span class="num">NEXT</span>Where to start</h2>
+
+  <p>Do not start with something ambitious. Change a number in <code>data/metrics.json</code>, run the build, watch the page change. Then delete the sample dashboard and ask Claude Code to build yours:</p>
+
+  <pre><code>cd &lt;your project folder&gt;
+claude</code></pre>
+
+  <p>Paste the interview prompt from Part 4, and answer the questions.</p>
+
+  <div class="demo-card">
+    <div>
+      <strong>Get the files</strong>
+      <p>All four scaffolding files, the sample dashboard, the build script and the Action.</p>
+    </div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <a class="btn btn-2" href="demo.html">Demo</a>
+      <a class="btn" href="https://github.com/phuazz/claude-code-starter-kit">GitHub repo →</a>
+    </div>
+  </div>
+
+  <footer>
+    Built with Claude Code. Hosted free on GitHub Pages from <code>/docs</code> — this page included.
+    <a href="https://github.com/phuazz/claude-code-starter-kit">github.com/phuazz/claude-code-starter-kit</a>
+  </footer>
+
 </div>
 
 <script>
-/* ---------------------------------------------------------------------------
-   DATA BOOTSTRAP — the one clever bit in this file.
-
-   pipeline.py replaces the line below with the real data inlined, so the built
-   docs/index.html is a single self-contained file that needs no server.
-   Left as-is (i.e. empty), the page falls back to fetching data/metrics.json,
-   so `npx serve .` works during development without running a build.
-
-   Keep this pattern. It is what lets you develop fast and ship standalone.
---------------------------------------------------------------------------- */
-const PRELOADED_DATA = {"meta":{"title":"Sample Dashboard","subtitle":"a worked example","last_updated":"2026-07-17","source":"Made-up numbers. Replace with yours."},"kpis":[{"label":"Total Visits","value":"48,210","delta":12.4},{"label":"Signups","value":"1,904","delta":8.1},{"label":"Conversion","value":"3.95%","delta":-0.4},{"label":"Revenue","value":"$82,400","delta":-3.2}],"series":{"dates":["2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04","2026-05","2026-06","2026-07"],"visits":[31200,33100,32400,35800,39200,37600,40100,42800,41500,44900,46300,48210],"signups":[1210,1305,1288,1402,1560,1495,1618,1702,1665,1780,1841,1904]},"table":[{"channel":"Organic search","visits":21400,"signups":892,"rate":4.17},{"channel":"Direct","visits":12800,"signups":501,"rate":3.91},{"channel":"Referral","visits":8100,"signups":340,"rate":4.2},{"channel":"Social","visits":5910,"signups":171,"rate":2.89}]};
-
-async function loadData() {
-  if (Object.keys(PRELOADED_DATA).length) return PRELOADED_DATA;
-  const res = await fetch('data/metrics.json');
-  if (!res.ok) throw new Error('Could not load data/metrics.json — run `npx serve .` from the project root.');
-  return res.json();
-}
-
-const CHART_LAYOUT = {
-  paper_bgcolor: 'transparent',
-  plot_bgcolor: '#fafaf8',
-  font: { family: 'DM Sans', size: 10, color: '#5c5c56' },
-  margin: { t: 10, b: 30, l: 55, r: 55 },
-  xaxis: { gridcolor: '#eeeee8', linecolor: '#d5d3ca', linewidth: 1, showgrid: false, tickfont: { size: 9 } },
-  yaxis: { title: { text: 'Visits', font: { size: 10 } }, gridcolor: '#f0f0ea', linecolor: '#d5d3ca', linewidth: 1, showgrid: true, tickfont: { size: 9, family: 'JetBrains Mono' } },
-  yaxis2: { title: { text: 'Signups', font: { size: 10 } }, overlaying: 'y', side: 'right', showgrid: false, linecolor: '#d5d3ca', tickfont: { size: 9, family: 'JetBrains Mono' } },
-  showlegend: true,
-  legend: { x: 0, y: 1.08, orientation: 'h', font: { size: 9 }, bgcolor: 'transparent' },
-  hovermode: 'x unified',
-  hoverlabel: { bgcolor: '#fff', bordercolor: '#d5d3ca', font: { size: 10, family: 'DM Sans' } }
-};
-
-const fmt = n => n.toLocaleString('en-US');
-const sign = n => (n > 0 ? '+' : '') + n.toFixed(1) + '%';
-
-function render(d) {
-  document.getElementById('title').firstChild.textContent = d.meta.title + ' ';
-  document.getElementById('subtitle').textContent = d.meta.subtitle;
-  document.getElementById('updated').textContent = d.meta.last_updated;
-  document.getElementById('source').textContent = 'Source: ' + d.meta.source;
-  document.title = d.meta.title;
-
-  document.getElementById('kpis').innerHTML = d.kpis.map(k => `
-    <div class="kpi">
-      <div class="label">${k.label}</div>
-      <div class="kpi-val">${k.value}</div>
-      <div class="kpi-delta ${k.delta >= 0 ? 'pos' : 'neg'}">${sign(k.delta)}</div>
-    </div>`).join('');
-
-  document.getElementById('tbody').innerHTML = d.table.map(r => `
-    <tr>
-      <td>${r.channel}</td>
-      <td class="num">${fmt(r.visits)}</td>
-      <td class="num">${fmt(r.signups)}</td>
-      <td class="num">${r.rate.toFixed(2)}</td>
-    </tr>`).join('');
-
-  Plotly.newPlot('chart', [
-    { x: d.series.dates, y: d.series.visits, name: 'Visits', type: 'scatter', mode: 'lines',
-      line: { color: '#2563eb', width: 2 }, fill: 'tozeroy', fillcolor: 'rgba(37,99,235,0.06)' },
-    { x: d.series.dates, y: d.series.signups, name: 'Signups', type: 'scatter', mode: 'lines',
-      yaxis: 'y2', line: { color: '#1a8754', width: 2 } }
-  ], CHART_LAYOUT, { responsive: true, displayModeBar: false });
-}
-
-loadData().then(render).catch(err => {
-  document.getElementById('kpis').innerHTML =
-    `<div class="kpi" style="grid-column:1/-1"><div class="label neg">Error</div><div>${err.message}</div></div>`;
+// Copy buttons on every code block. Injected rather than hand-written into each
+// <pre> so there is one implementation to fix.
+document.querySelectorAll('pre').forEach(pre => {
+  const btn = document.createElement('button');
+  btn.className = 'copy';
+  btn.textContent = 'Copy';
+  btn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(pre.querySelector('code').textContent);
+      btn.textContent = 'Copied'; btn.classList.add('done');
+    } catch {
+      btn.textContent = 'Press Ctrl+C';   // clipboard API needs HTTPS or localhost
+    }
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1600);
+  });
+  pre.appendChild(btn);
 });
 </script>
 </body>

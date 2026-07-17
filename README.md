@@ -1,8 +1,12 @@
 # Claude Code Starter Kit
 
+**→ Read the guide: https://phuazz.github.io/claude-code-starter-kit/**
+
 A working example of the method: build things with Claude Code, host them free on GitHub Pages, and never re-explain yourself twice.
 
 This kit is deliberately small. It contains one dashboard that actually works, and four text files that do most of the real work. Clone it, run it, then throw away my example and keep the structure.
+
+The guide linked above is the same material as this README, laid out as a web page — and it is itself hosted by the mechanism it describes. This README is the version for people already reading the code.
 
 ---
 
@@ -94,14 +98,15 @@ python scripts/pipeline.py
 npx serve docs
 ```
 
-Open the URL it prints, usually http://localhost:3000. You should see a working dashboard.
+Open the URL it prints, usually http://localhost:3000. You should see the guide, with the working dashboard one click away.
 
 Now the important part — look at what just happened:
 
 - `template.html` is the **source**. It is small, and it is the only HTML you ever edit by hand.
 - `data/metrics.json` is the **data**. Plain numbers, no code.
 - `scripts/pipeline.py` is the **build**. It injects the data into the template and writes the result.
-- `docs/index.html` is the **output**. You never edit this. It is generated. It can be huge, and that is fine because nobody reads it.
+- `docs/demo.html` is the **output**. You never edit this. It is generated. It can be huge, and that is fine because nobody reads it.
+- `docs/index.html` is the **guide** — hand-written, and the exception that proves the rule. Generated and hand-written pages coexist in `docs/` fine; you just have to know which is which, because you never hand-edit a generated one. In a project of your own there is usually no guide, and the build simply writes `docs/index.html`.
 
 That split is the whole architecture, and it is why this stays cheap to maintain. When you change the look, you edit the template. When the numbers change, you edit the JSON. The two never fight.
 
