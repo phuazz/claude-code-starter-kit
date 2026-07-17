@@ -74,6 +74,11 @@ pre:hover .copy { opacity:1; }
 .callout.key .label { color:var(--g-text); }
 
 .step { display:grid; grid-template-columns:34px 1fr; gap:14px; margin:24px 0; }
+/* Grid items default to min-width:auto, so the wide <pre> inside sets an
+   intrinsic floor and the 1fr column refuses to shrink — that pushed the whole
+   page sideways at 375px. min-width:0 lets the column shrink and the <pre>
+   scroll inside its own box, which is what it is already set up to do. */
+.step > div { min-width:0; }
 .step-n { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--t1); background:var(--bg3); border:1px solid var(--bd); border-radius:100px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; }
 .step h3 { margin-top:2px; }
 
@@ -98,6 +103,10 @@ details pre { margin:0; border:none; border-radius:0; box-shadow:none; border-to
 table { width:100%; border-collapse:collapse; margin:16px 0; }
 th { background:var(--bg3); border-bottom:2px solid var(--bd2); padding:10px 12px; text-align:left; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--t2); }
 td { padding:11px 12px; border-bottom:1px solid var(--bd); font-size:15px; color:var(--t2); vertical-align:top; }
+/* A long command or URL in inline <code> is one unbreakable token, and a table
+   will not shrink below it — that pushed the page sideways at 375px. Let those
+   break; prose in the same cell still wraps normally on spaces. */
+td code, th code { overflow-wrap:anywhere; }
 td:first-child { color:var(--t1); }
 tbody tr:hover { background:var(--bg-hover); }
 table.tt td:first-child { font-family:var(--mono); font-size:13.5px; }
@@ -313,6 +322,23 @@ to "My Dashboard". Show me the plan before you start.</code></pre>
 git commit -m "Initial commit"
 git push -u origin main</code></pre>
 
+  <h3>The first push asks who you are</h3>
+  <p>Git has to prove you are allowed to write to that repository. <strong>Do not type your GitHub password — it will be rejected.</strong> GitHub removed password access for this years ago, and the error it gives you is not obvious about what to do instead.</p>
+
+  <div class="callout">
+    <div class="label">Windows — nothing to do</div>
+    <p>Git for Windows ships with <strong>Git Credential Manager</strong>. On your first push a browser window opens, you sign in to GitHub once, and it is remembered from then on.</p>
+  </div>
+
+  <div class="callout">
+    <div class="label">Mac — one extra step</div>
+    <p>Mac Git has no such helper, so the push just fails. The simplest fix is GitHub's own command-line tool:</p>
+    <p style="margin-top:8px"><code>brew install gh</code> &nbsp;then&nbsp; <code>gh auth login</code></p>
+    <p style="margin-top:8px">Choose <strong>HTTPS</strong> when it asks about protocol, and answer <strong>Y</strong> when it offers to authenticate Git with your GitHub credentials — that second answer is the one that makes <code>git push</code> work. If you do not have Homebrew, get it from <a href="https://brew.sh">brew.sh</a> first.</p>
+  </div>
+
+  <p>Either way you do this once per machine, not once per project.</p>
+
   <div class="callout">
     <div class="label">Starting a project from scratch instead?</div>
     <p>If the folder is your own and has never been cloned, it has no remote yet, so use <code>git remote add origin &lt;url&gt;</code> — <em>add</em> rather than <em>set-url</em>. If Git ever says <code>remote origin already exists</code>, you want <code>set-url</code>.</p>
@@ -495,6 +521,14 @@ wrong. Read README.md and CLAUDE.md in this folder first.</code></pre>
       <tr>
         <td>Ok to proceed? (y)</td>
         <td>Not an error. Node is fetching the <code>serve</code> package. Press <code>y</code> and Enter.</td>
+      </tr>
+      <tr>
+        <td>Support for password<br>authentication was removed<br><em>or</em> Authentication failed</td>
+        <td>You typed your GitHub password. It cannot work — see <a href="#p4">the first push asks who you are</a>. <strong>Windows:</strong> a browser window should open instead; if it did not, reinstall Git for Windows and accept the defaults. <strong>Mac:</strong> run <code>brew install gh</code> then <code>gh auth login</code>, choosing HTTPS and answering Y.</td>
+      </tr>
+      <tr>
+        <td>Permission denied<br>(publickey)</td>
+        <td>You are using an SSH URL. Point the remote at the <code>https://</code> one GitHub shows you: <code>git remote set-url origin https://github.com/&lt;you&gt;/&lt;repo&gt;.git</code>.</td>
       </tr>
       <tr>
         <td>Your Pages URL 404s</td>

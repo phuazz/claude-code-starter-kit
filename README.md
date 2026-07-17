@@ -134,6 +134,23 @@ If the folder is your own and was never cloned, it has no remote yet, so use
 `git remote add origin <url>` instead. If Git says `remote origin already
 exists`, you want `set-url`.
 
+**The first push asks who you are.** Do not type your GitHub password — it will
+be rejected; GitHub removed password access for this years ago.
+
+- **Windows:** nothing to do. Git for Windows ships Git Credential Manager, so a
+  browser window opens, you sign in once, and it is remembered.
+- **Mac:** Git has no such helper and the push simply fails. Install GitHub's
+  CLI and log in once:
+
+```
+brew install gh
+gh auth login
+```
+
+Choose **HTTPS** for the protocol, and answer **Y** when it offers to
+authenticate Git with your GitHub credentials — that second answer is what makes
+`git push` work. Once per machine, not once per project.
+
 3. On GitHub: **Settings → Pages → Source: Deploy from a branch → Branch: `main`, folder: `/docs` → Save.**
 4. Wait a minute. Your page is live at `https://<you>.github.io/<repo>/`.
 
