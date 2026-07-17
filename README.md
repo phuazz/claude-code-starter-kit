@@ -46,8 +46,11 @@ Runs the build script that turns your data plus your template into the finished 
 Check:
 
 ```
-python --version
+python --version     # Windows
+python3 --version    # Mac
 ```
+
+**On a Mac the command is `python3`.** Plain `python` does not exist and will say "command not found". Everywhere in this README you see `python`, type `python3` instead.
 
 If Windows says it is not recognised, you missed the PATH box — re-run the installer and choose "Modify".
 
@@ -117,21 +120,19 @@ You can also open `template.html` directly with `npx serve .` — it falls back 
 ## Part 3 — Publish it free
 
 1. Create a new repository on GitHub. Do not add a README when it offers.
-2. Push this folder to it. GitHub shows you the exact URL after you create the repo:
+2. GitHub then shows you your repository URL. You cloned this kit, so your folder
+   currently points at mine — this repoints it at yours:
 
 ```
-git remote add origin https://github.com/<you>/<repo>.git
+git remote set-url origin https://github.com/<you>/<repo>.git
 git add -A
 git commit -m "Initial commit"
 git push -u origin main
 ```
 
-If Git says the remote already exists (because you cloned this rather than
-starting fresh), point it at yours instead:
-
-```
-git remote set-url origin https://github.com/<you>/<repo>.git
-```
+If the folder is your own and was never cloned, it has no remote yet, so use
+`git remote add origin <url>` instead. If Git says `remote origin already
+exists`, you want `set-url`.
 
 3. On GitHub: **Settings → Pages → Source: Deploy from a branch → Branch: `main`, folder: `/docs` → Save.**
 4. Wait a minute. Your page is live at `https://<you>.github.io/<repo>/`.

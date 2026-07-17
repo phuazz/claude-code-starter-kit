@@ -37,7 +37,14 @@ body { background:var(--bg); color:var(--t1); font-family:var(--sans); line-heig
 .lede { font-size:18px; color:var(--t2); margin:24px 0 8px; }
 .lede strong { color:var(--t1); font-weight:600; }
 
-h2 { font-family:var(--serif); font-size:26px; font-weight:400; letter-spacing:-0.3px; margin:48px 0 4px; padding-top:20px; border-top:1px solid var(--bd); }
+/* Table of contents */
+.toc { background:var(--bg2); border:1px solid var(--bd); border-radius:var(--radius-lg); padding:16px 20px; margin:24px 0; }
+.toc-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--t3); margin-bottom:8px; }
+.toc ol { margin:0 0 0 18px; }
+.toc li { margin:3px 0; font-size:14px; }
+.toc .t { color:var(--t3); font-family:var(--mono); font-size:11px; }
+
+h2 { font-family:var(--serif); font-size:26px; font-weight:400; letter-spacing:-0.3px; margin:48px 0 4px; padding-top:20px; border-top:1px solid var(--bd); scroll-margin-top:12px; }
 h2 .num { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--t4); display:block; letter-spacing:1px; margin-bottom:2px; }
 h3 { font-size:15px; font-weight:700; margin:26px 0 6px; letter-spacing:-0.1px; }
 p { margin:12px 0; color:var(--t2); }
@@ -49,6 +56,7 @@ a { color:var(--b); text-decoration:underline; text-underline-offset:2px; text-d
 code { font-family:var(--mono); font-size:0.88em; background:var(--bg3); border:1px solid var(--bd); border-radius:4px; padding:1px 5px; color:var(--t1); }
 pre { position:relative; background:var(--bg2); border:1px solid var(--bd); border-radius:var(--radius); padding:14px 16px; margin:12px 0; overflow-x:auto; box-shadow:var(--shadow); }
 pre code { background:none; border:none; padding:0; font-size:12.5px; line-height:1.7; display:block; white-space:pre; }
+pre .cm { color:var(--t3); }
 .copy { position:absolute; top:8px; right:8px; font-family:var(--sans); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--t3); background:var(--bg3); border:1px solid var(--bd); border-radius:100px; padding:3px 9px; cursor:pointer; opacity:0; transition:opacity .12s,color .12s; }
 pre:hover .copy { opacity:1; }
 .copy:hover { color:var(--t1); }
@@ -64,14 +72,29 @@ pre:hover .copy { opacity:1; }
 .step-n { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--t1); background:var(--bg3); border:1px solid var(--bd); border-radius:100px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; }
 .step h3 { margin-top:2px; }
 
-.arch { font-family:var(--mono); font-size:12px; line-height:1.9; background:var(--bg2); border:1px solid var(--bd); border-radius:var(--radius); padding:14px 16px; margin:16px 0; overflow-x:auto; }
-.arch .c { color:var(--t3); }
+/* File cards — the four scaffolding files, openable */
+.files { display:grid; gap:1px; background:var(--bd); border:1px solid var(--bd); border-radius:var(--radius-lg); overflow:hidden; margin:18px 0; }
+.file { background:var(--bg2); padding:14px 18px; }
+.file-top { display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; }
+.file-name { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--t1); }
+.file-open { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; white-space:nowrap; }
+.file p { margin:3px 0 0; font-size:13.5px; }
+
+details { margin:12px 0; border:1px solid var(--bd); border-radius:var(--radius); background:var(--bg2); overflow:hidden; }
+summary { cursor:pointer; padding:9px 14px; font-size:12px; font-weight:600; color:var(--t2); background:var(--bg3); list-style:none; user-select:none; }
+summary::-webkit-details-marker { display:none; }
+summary::before { content:'▸ '; color:var(--t3); }
+details[open] summary::before { content:'▾ '; }
+summary:hover { color:var(--t1); }
+details pre { margin:0; border:none; border-radius:0; box-shadow:none; border-top:1px solid var(--bd); }
 
 table { width:100%; border-collapse:collapse; margin:16px 0; }
 th { background:var(--bg3); border-bottom:2px solid var(--bd2); padding:9px 12px; text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--t3); }
 td { padding:9px 12px; border-bottom:1px solid var(--bd); font-size:13.5px; color:var(--t2); vertical-align:top; }
-td:first-child { font-family:var(--mono); font-size:12px; color:var(--t1); white-space:nowrap; }
+td:first-child { color:var(--t1); }
 tbody tr:hover { background:var(--bg-hover); }
+table.tt td:first-child { font-family:var(--mono); font-size:12px; }
+table.arch-t td:first-child { font-family:var(--mono); font-size:12px; white-space:nowrap; }
 
 .demo-card { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; background:var(--bg2); border:1px solid var(--bd); border-radius:var(--radius-lg); box-shadow:var(--shadow); padding:18px 20px; margin:20px 0; }
 .demo-card p { margin:2px 0 0; font-size:13.5px; }
@@ -102,9 +125,22 @@ footer a { color:var(--t2); }
     </div>
   </div>
 
-  <p class="lede">Everything below is one working example: a dashboard that builds from a template and a JSON file, and publishes itself to the web for <strong>free</strong>, forever, with no server. Follow it top to bottom and you will have your own live page in about half an hour.</p>
+  <p class="lede">Everything below is one working example: a dashboard that builds from a template and a JSON file, and publishes itself to the web for <strong>free</strong>, forever, with no server. Follow it top to bottom and you will have your own live page in about an hour.</p>
 
   <p>You do not need to be a programmer. You do need to be willing to type commands you do not fully understand yet — that part is normal and it passes.</p>
+
+  <div class="toc">
+    <div class="toc-label">What you are about to do</div>
+    <ol>
+      <li><a href="#p1">Install four things</a> <span class="t">~20 min</span></li>
+      <li><a href="#p2">Run the kit and see it work</a> <span class="t">~5 min</span></li>
+      <li><a href="#p3">Your first five minutes inside Claude Code</a> <span class="t">~10 min</span></li>
+      <li><a href="#p4">Publish it free on the internet</a> <span class="t">~10 min</span></li>
+      <li><a href="#p5">The actual method — the four files</a> <span class="t">read it</span></li>
+      <li><a href="#p6">Habits that matter more than they look</a></li>
+      <li><a href="#p7">When it goes wrong</a> <span class="t">bookmark this</span></li>
+    </ol>
+  </div>
 
   <div class="demo-card">
     <div>
@@ -115,7 +151,7 @@ footer a { color:var(--t2); }
   </div>
 
   <!-- ============================================================ -->
-  <h2><span class="num">PART 1</span>Install these four things</h2>
+  <h2 id="p1"><span class="num">PART 1</span>Install these four things</h2>
 
   <p>In order. Each takes a few minutes. You do not need to understand them yet — install now, understand later.</p>
 
@@ -130,6 +166,7 @@ footer a { color:var(--t2); }
       </ul>
       <p>Then open a terminal — Windows: search for <strong>Git Bash</strong>; Mac: <strong>Terminal</strong> — and check it worked:</p>
       <pre><code>git --version</code></pre>
+      <p>You should see a version number. If it says “command not found”, close the terminal, open a new one, and try again — a fresh terminal is needed to notice a new install. That is true of every install on this page.</p>
       <p>Then tell Git who you are, once, forever:</p>
       <pre><code>git config --global user.name "Your Name"
 git config --global user.email "your@email.com"</code></pre>
@@ -145,7 +182,12 @@ git config --global user.email "your@email.com"</code></pre>
         <div class="label">Windows — the one box everybody misses</div>
         <p>Tick <strong>“Add Python to PATH”</strong> on the very first installer screen. Skipping it causes every <code>python is not recognised</code> error you will hit later. If you missed it, re-run the installer and choose “Modify”.</p>
       </div>
-      <pre><code>python --version</code></pre>
+      <div class="callout">
+        <div class="label">Mac — it is python3, not python</div>
+        <p>On a Mac the command is <code>python3</code>. Plain <code>python</code> does not exist and will say “command not found”. <strong>Everywhere on this page you see <code>python</code>, type <code>python3</code> instead.</strong> Same for the build command later.</p>
+      </div>
+      <pre><code>python --version     <span class="cm"># Windows</span>
+python3 --version    <span class="cm"># Mac</span></code></pre>
     </div>
   </div>
 
@@ -177,18 +219,26 @@ git config --global user.email "your@email.com"</code></pre>
   <p>Not an install, but you need it. Sign up free at <a href="https://github.com">github.com</a>. This is where your code lives and where your finished pages get hosted, at no cost.</p>
 
   <!-- ============================================================ -->
-  <h2><span class="num">PART 2</span>Run it</h2>
+  <h2 id="p2"><span class="num">PART 2</span>Run it</h2>
+
+  <p>Type these one line at a time, pressing Enter after each. The first command downloads this kit into a new folder; the rest build it and show it to you.</p>
 
   <pre><code>git clone https://github.com/phuazz/claude-code-starter-kit.git
 cd claude-code-starter-kit
 python scripts/pipeline.py
 npx serve docs</code></pre>
 
-  <p>Open the URL it prints — usually <code>http://localhost:3000</code> — and click through to the demo. You just built the same page you saw above, on your own machine.</p>
+  <div class="callout">
+    <div class="label">Two things that will happen and are not errors</div>
+    <p><strong>Where did the folder go?</strong> Wherever your terminal was pointing — usually your home folder, so <code>C:\Users\you\claude-code-starter-kit</code> or <code>/Users/you/claude-code-starter-kit</code>. Type <code>pwd</code> at any time to see where you are.</p>
+      <p><strong>“Ok to proceed? (y)”</strong> — the first time you run <code>npx serve</code>, Node offers to fetch the <code>serve</code> package. Press <code>y</code> and Enter. It only asks once.</p>
+  </div>
+
+  <p>Open the URL it prints — usually <code>http://localhost:3000</code> — and click through to the demo. You just built the same page you saw above, on your own machine. Press <code>Ctrl+C</code> in the terminal to stop the server when you are done looking.</p>
 
   <p>Now look at <em>what actually happened</em>, because this is the whole architecture:</p>
 
-  <table>
+  <table class="arch-t">
     <thead><tr><th>File</th><th>What it is</th></tr></thead>
     <tbody>
       <tr><td>template.html</td><td><strong>The source.</strong> Small, and the only HTML you ever edit by hand.</td></tr>
@@ -201,38 +251,77 @@ npx serve docs</code></pre>
   <p>That split is why this stays cheap to maintain. Change the look, edit the template. Change the numbers, edit the JSON. The two never fight, and you can regenerate the output at any time from the other two.</p>
 
   <div class="callout key">
-    <div class="label">The habit to build</div>
-    <p>Edit → <code>python scripts/pipeline.py</code> → look. That loop is the entire job. Everything else is detail. Start by changing a number in <code>data/metrics.json</code> and watching the page move.</p>
+    <div class="label">Do this now — it is the whole job</div>
+    <p>Open <code>data/metrics.json</code> in any text editor, change <code>48,210</code> to something silly, save, run <code>python scripts/pipeline.py</code>, and reload the demo. <strong>Edit → build → look.</strong> That loop is everything. The rest of this page is detail.</p>
   </div>
 
   <!-- ============================================================ -->
-  <h2><span class="num">PART 3</span>Publish it free</h2>
+  <h2 id="p3"><span class="num">PART 3</span>Your first five minutes inside Claude Code</h2>
+
+  <p>Nobody explains this part, and it is where most people get confused. Start it from inside the kit folder:</p>
+
+  <pre><code>cd claude-code-starter-kit
+claude</code></pre>
+
+  <p>You now have a prompt. Type a request in plain English and press Enter. Try this one — it is real work, and it is safe:</p>
+
+  <pre><code>Read README.md, then change the dashboard title from "Sample Dashboard"
+to "My Dashboard". Show me the plan before you start.</code></pre>
+
+  <h3>It will ask permission — this is the important bit</h3>
+  <p>Before Claude Code edits a file or runs a command, it stops and asks you, showing exactly what it wants to do. You approve it, reject it, or tell it to stop asking for that kind of thing in this project. <strong>Nothing happens to your files without you saying yes.</strong> That is why it is safe to let it work.</p>
+  <p>Read the diff it shows you. Approving without looking is how people end up surprised.</p>
+
+  <h3>The five things worth knowing on day one</h3>
+  <table class="tt">
+    <tbody>
+      <tr><td>Esc</td><td>Interrupt it mid-answer. Use this the moment it goes the wrong way — do not wait politely for it to finish.</td></tr>
+      <tr><td>/clear</td><td>Wipe the conversation and start fresh. Do this between unrelated tasks; a stale conversation makes answers worse.</td></tr>
+      <tr><td>/exit</td><td>Quit.</td></tr>
+      <tr><td>Shift+Tab</td><td>Cycles how much it asks permission for — including <strong>plan mode</strong>, where it can read and explore but cannot change anything. Good for “explain this to me” sessions.</td></tr>
+      <tr><td>Just talk</td><td>“That is wrong because X” is a valid message. So is “no, do it the other way”. It is a conversation, not a command line.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <div class="label">If it cannot see your files</div>
+    <p>You launched it from the wrong folder. Type <code>/exit</code>, <code>cd</code> into the project, and run <code>claude</code> again. This is the single most common beginner problem.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2 id="p4"><span class="num">PART 4</span>Publish it free</h2>
+
+  <p>Your page goes on the internet, at no cost, on GitHub Pages. The page you are reading right now is hosted exactly this way.</p>
 
   <ol>
-    <li>Create a new repository on GitHub. Do not add a README when it offers.</li>
-    <li>Push your folder to it — GitHub shows you the exact URL after you create the repo:</li>
+    <li>Create a new repository on GitHub. Do not tick “Add a README” when it offers.</li>
+    <li>GitHub then shows you your repository URL. Point your folder at it. <strong>You cloned this kit in Part 2, so your folder currently points at mine — this command repoints it at yours:</strong></li>
   </ol>
-
-  <pre><code>git remote add origin https://github.com/&lt;you&gt;/&lt;repo&gt;.git
-git add -A
-git commit -m "Initial commit"
-git push -u origin main</code></pre>
-
-  <p>If Git says the remote already exists (because you cloned this rather than starting fresh), point it at yours instead:</p>
 
   <pre><code>git remote set-url origin https://github.com/&lt;you&gt;/&lt;repo&gt;.git</code></pre>
 
+  <p>Replace <code>&lt;you&gt;</code> and <code>&lt;repo&gt;</code> with your own. Then send your files up:</p>
+
+  <pre><code>git add -A
+git commit -m "Initial commit"
+git push -u origin main</code></pre>
+
+  <div class="callout">
+    <div class="label">Starting a project from scratch instead?</div>
+    <p>If the folder is your own and has never been cloned, it has no remote yet, so use <code>git remote add origin &lt;url&gt;</code> — <em>add</em> rather than <em>set-url</em>. If Git ever says <code>remote origin already exists</code>, you want <code>set-url</code>.</p>
+  </div>
+
   <ol start="3">
     <li>On GitHub: <strong>Settings → Pages → Source: Deploy from a branch → Branch <code>main</code>, folder <code>/docs</code> → Save.</strong></li>
-    <li>Wait a minute. Your page is live at <code>https://&lt;you&gt;.github.io/&lt;repo&gt;/</code>.</li>
+    <li>Wait a minute or two, then visit <code>https://&lt;you&gt;.github.io/&lt;repo&gt;/</code>.</li>
   </ol>
 
-  <p>That is it. Every push updates the page. Free, permanent, no server. The page you are reading right now is hosted exactly this way.</p>
+  <p>That is it. Every push updates the page. Free, permanent, no server.</p>
 
   <p>The kit also ships a GitHub Action (<code>.github/workflows/build.yml</code>) that reruns the build for you on every push and once a week. Once that works, add a step that fetches fresh data before the build and your page updates itself forever, without you touching it.</p>
 
   <!-- ============================================================ -->
-  <h2><span class="num">PART 4</span>The actual method</h2>
+  <h2 id="p5"><span class="num">PART 5</span>The actual method</h2>
 
   <p>Everything above is plumbing. This part is why it keeps working after week one, and it is the part people skip.</p>
 
@@ -241,19 +330,57 @@ git push -u origin main</code></pre>
     <p>The productivity does not come from clever prompting. It comes from <strong>four files that mean you never explain yourself twice.</strong></p>
   </div>
 
-  <p>Claude Code reads these automatically at the start of every session, so it begins already knowing your rules instead of guessing at them.</p>
+  <p>Claude Code reads these automatically at the start of every session, so it begins already knowing your rules instead of guessing at them. <strong>Open them — they are short, and reading them is the fastest way to understand this whole page:</strong></p>
 
-  <div class="arch">
-    <div>CLAUDE.md           <span class="c">— your standing rules</span></div>
-    <div>PROMPT_TEMPLATE.md  <span class="c">— how to ask for work</span></div>
-    <div>KICKOFF_TEMPLATE.md <span class="c">— how to start something new</span></div>
-    <div>design.md           <span class="c">— how it should look</span></div>
+  <div class="files">
+    <div class="file">
+      <div class="file-top">
+        <span class="file-name">CLAUDE.md</span>
+        <a class="file-open" href="https://github.com/phuazz/claude-code-starter-kit/blob/main/CLAUDE.md">Open file →</a>
+      </div>
+      <p>Your standing rules. Read automatically, every session.</p>
+    </div>
+    <div class="file">
+      <div class="file-top">
+        <span class="file-name">PROMPT_TEMPLATE.md</span>
+        <a class="file-open" href="https://github.com/phuazz/claude-code-starter-kit/blob/main/PROMPT_TEMPLATE.md">Open file →</a>
+      </div>
+      <p>How to ask for work. Includes what to leave out, and a before/after.</p>
+    </div>
+    <div class="file">
+      <div class="file-top">
+        <span class="file-name">KICKOFF_TEMPLATE.md</span>
+        <a class="file-open" href="https://github.com/phuazz/claude-code-starter-kit/blob/main/KICKOFF_TEMPLATE.md">Open file →</a>
+      </div>
+      <p>How to start something new — the interview trick.</p>
+    </div>
+    <div class="file">
+      <div class="file-top">
+        <span class="file-name">design.md</span>
+        <a class="file-open" href="https://github.com/phuazz/claude-code-starter-kit/blob/main/design.md">Open file →</a>
+      </div>
+      <p>How it should look. Colours, fonts, layout, chart defaults.</p>
+    </div>
   </div>
 
   <h3>CLAUDE.md — your standing rules</h3>
   <p>Read automatically at the start of every session in that folder or any folder inside it. This is where you write down what you would otherwise repeat in every conversation: how you want writing to sound, what your build command is, what Claude must never do.</p>
   <p>The single highest-value line in mine is a guardrail: <em>never open generated output larger than 500KB.</em> Generated files are enormous, and one accidental read wastes the whole session.</p>
   <p><strong>Write your guardrails as rules, not as reminders you have to remember to give.</strong> That is the difference between a setup that scales and one that does not.</p>
+
+  <details>
+    <summary>Excerpt — the guardrails section</summary>
+    <pre><code><span class="cm">### Hard rules</span>
+
+- **NEVER open generated output larger than 500KB.** It wastes the
+  session. Work on `template.html` instead.
+- **Check file size before opening anything unfamiliar.** Over 200KB,
+  stop and ask me to point you at the source file.
+- **Pattern consistency.** When fixing a pattern, apply the fix to every
+  instance of that pattern, and audit for others before calling it done.
+- **Never commit credentials, API keys, or personal identifiers.**</code></pre>
+  </details>
+
   <div class="callout">
     <div class="label">How to grow it — do not write it up front</div>
     <p>Start nearly empty. Add a rule <strong>the moment you catch yourself correcting Claude twice on the same thing.</strong> That is the only trigger you need. Mine reached a couple of hundred lines over months without me ever sitting down to write it.</p>
@@ -275,6 +402,28 @@ Show me the plan before you start.</code></pre>
     <li>Vague adjectives with no checklist — <em>“rigorous”, “thorough”</em></li>
   </ul>
   <p>The test: <strong>if a phrase does not change what a correct output would look like, it is decoration.</strong> Replace adjectives with checklists — “rigorous review” becomes the three specific things rigour means here.</p>
+
+  <details>
+    <summary>Excerpt — the same request, before and after</summary>
+    <pre><code><span class="cm">BEFORE — theatre</span>
+
+Act as a world-class engineer. This is critical work. Take a deep
+breath and rigorously review my data pipeline for robustness. I bet
+you cannot find real issues.
+
+<span class="cm">AFTER — actual instruction</span>
+
+Review the data pipeline. Check specifically:
+(1) what happens when the input JSON is missing a field,
+(2) whether dates are parsed with a library rather than string slicing,
+(3) month and year boundary handling,
+(4) what happens on an empty input file,
+(5) whether the build fails loudly or writes a broken page.
+Flag anything uncertain rather than papering over it.
+
+<span class="cm">Same length. Zero persona. Dramatically better output, because</span>
+<span class="cm">every clause constrains what "done" looks like.</span></code></pre>
+  </details>
 
   <h3>KICKOFF_TEMPLATE.md — how to start something new</h3>
   <p>The best trick in the kit. When you have a goal but not a spec, do not describe it badly and hope. <strong>Make Claude interview you.</strong> You end up with a better-specified project than you would have written alone, because answering a pointed question is far easier than imagining the whole thing up front.</p>
@@ -304,7 +453,7 @@ wrong. Read README.md and CLAUDE.md in this folder first.</code></pre>
   <p>One rule keeps it alive: <strong>if you need a value the system does not have, add it there first, then use it.</strong> The moment one project invents its own blue, the system is dead.</p>
 
   <!-- ============================================================ -->
-  <h2><span class="num">PART 5</span>Habits that matter more than they look</h2>
+  <h2 id="p6"><span class="num">PART 6</span>Habits that matter more than they look</h2>
 
   <p><strong>Let it work, then check it.</strong> Claude Code writes the file, runs the build, and reads the error. Your job is to check the output and push back — not to supervise each keystroke. Ask for a plan on anything non-trivial; let the small stuff run.</p>
 
@@ -317,14 +466,57 @@ wrong. Read README.md and CLAUDE.md in this folder first.</code></pre>
   <p><strong>Iterate across turns.</strong> Do not try to one-shot the perfect prompt. Nobody writes it first time, and trying to is slower than correcting a draft.</p>
 
   <!-- ============================================================ -->
-  <h2><span class="num">NEXT</span>Where to start</h2>
+  <h2 id="p7"><span class="num">PART 7</span>When it goes wrong</h2>
+
+  <p>Every one of these has happened to everybody. None of them mean you have broken anything.</p>
+
+  <table class="tt">
+    <thead><tr><th>What you see</th><th>What to do</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>python is not recognised</td>
+        <td><strong>Windows:</strong> you missed “Add Python to PATH”. Re-run the installer, choose “Modify”, tick the box. <strong>Mac:</strong> type <code>python3</code> instead of <code>python</code>.</td>
+      </tr>
+      <tr>
+        <td>command not found<br>(git, node, claude)</td>
+        <td>Close the terminal and open a new one. A terminal only notices new installs when it starts.</td>
+      </tr>
+      <tr>
+        <td>remote origin already exists</td>
+        <td>You cloned this kit, so <code>origin</code> points at mine. Use <code>git remote set-url origin &lt;your url&gt;</code> instead of <code>git remote add</code>.</td>
+      </tr>
+      <tr>
+        <td>Ok to proceed? (y)</td>
+        <td>Not an error. Node is fetching the <code>serve</code> package. Press <code>y</code> and Enter.</td>
+      </tr>
+      <tr>
+        <td>Your Pages URL 404s</td>
+        <td>Give it two minutes — the first build is slow. Then check <strong>Settings → Pages</strong> really says branch <code>main</code> and folder <code>/docs</code>.</td>
+      </tr>
+      <tr>
+        <td>Claude cannot see my files</td>
+        <td>You launched it from the wrong folder. <code>/exit</code>, <code>cd</code> into the project, run <code>claude</code> again.</td>
+      </tr>
+      <tr>
+        <td>Claude changed the wrong thing</td>
+        <td><code>git checkout -- &lt;filename&gt;</code> throws away the change. This is why you commit often — and why you read the diff before approving.</td>
+      </tr>
+      <tr>
+        <td>The page is blank</td>
+        <td>Right-click → Inspect → Console. Whatever red text is there, paste it to Claude Code and ask it to fix it. That is a completely normal way to work.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ============================================================ -->
+  <h2 id="next"><span class="num">NEXT</span>Where to start</h2>
 
   <p>Do not start with something ambitious. Change a number in <code>data/metrics.json</code>, run the build, watch the page change. Then delete the sample dashboard and ask Claude Code to build yours:</p>
 
   <pre><code>cd &lt;your project folder&gt;
 claude</code></pre>
 
-  <p>Paste the interview prompt from Part 4, and answer the questions.</p>
+  <p>Paste the interview prompt from Part 5, and answer the questions.</p>
 
   <div class="demo-card">
     <div>
@@ -352,8 +544,11 @@ document.querySelectorAll('pre').forEach(pre => {
   btn.className = 'copy';
   btn.textContent = 'Copy';
   btn.addEventListener('click', async () => {
+    // innerText, not textContent: it respects the rendered line breaks and
+    // drops nothing, so multi-line blocks copy as you see them.
+    const code = pre.querySelector('code').innerText;
     try {
-      await navigator.clipboard.writeText(pre.querySelector('code').textContent);
+      await navigator.clipboard.writeText(code);
       btn.textContent = 'Copied'; btn.classList.add('done');
     } catch {
       btn.textContent = 'Press Ctrl+C';   // clipboard API needs HTTPS or localhost
