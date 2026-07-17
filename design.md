@@ -43,6 +43,12 @@ Rule 5 is the one that matters. The moment one project invents its own blue, the
   /* accents: blue = neutral/baseline, amber = caution, purple, cyan = info, pink = alt */
   --b: #2563eb;  --b2: #3b82f6;  --b-bg: rgba(37,99,235,0.06);  --b-bg2: rgba(37,99,235,0.12);
   --a: #b45309;  --a-bg: rgba(180,83,9,0.07);
+  /* -text variants: the semantic colours above are tuned for fills, borders and
+     large type. At small sizes on their own tinted backgrounds they drop below
+     WCAG AA (--a hits 4.38:1, --g hits 3.97:1, both short of 4.5). Use these
+     darker variants for any small text sitting on a --*-bg tint. */
+  --a-text: #92400e;  /* 6.18:1 on --a-bg */
+  --g-text: #146c43;  /* 5.66:1 on --g-bg */
   --p: #7c3aed;  --p-bg: rgba(124,58,237,0.06);
   --c: #0891b2;  --c-bg: rgba(8,145,178,0.06);
   --pk: #be185d; --pk-bg: rgba(190,24,93,0.06);
@@ -80,6 +86,39 @@ Rule 5 is the one that matters. The moment one project invents its own blue, the
 **Numbers are always monospaced**, so columns align and digits do not jump around as values change. This is the single cheapest thing you can do to make a page look professional.
 
 Labels: `11px`, uppercase, `letter-spacing:0.8–1px`, weight 600–700, colour `--t3`.
+
+---
+
+## Two type scales: dashboards and documents
+
+This system was extracted from a dashboard, and dashboard type is **dense on purpose** — 11px uppercase labels, 12px table cells, monospaced numerals scanned at a glance on a large screen. That density is correct there and wrong everywhere else.
+
+**A long-form reading page is not a dashboard.** Guides, write-ups and documentation are read line by line, often on a phone, often by someone who is already confused. Using the dashboard scale on a document makes it look tidy and read badly. Pick the scale that matches the job:
+
+| Role | Dashboard | Document |
+|---|---|---|
+| Body text | 13–14px | **16px minimum**, `line-height:1.65` |
+| Code / preformatted | 12px | **14px** — it is the text people retype, so it earns the space |
+| Table cells | 12–13px | **15px** |
+| Table headers, meta, captions | 11px | **12px minimum** |
+| Secondary controls (summary, links in cards) | 11px | **13px** |
+
+### The contrast rule that constrains all of this
+
+Measured against `--bg` (`#fafaf8`):
+
+| Token | Contrast | Safe for |
+|---|---|---|
+| `--t1` `#1a1a18` | 16.7:1 | anything |
+| `--t2` `#5c5c56` | 6.4:1 | anything, including small text |
+| `--t3` `#8a8a82` | **3.5:1** | **large or bold text only — fails WCAG AA (4.5:1) at body size** |
+| `--t4` `#b0b0a8` | 1.9:1 | decorative only; never text that must be read |
+
+**Never put `--t3` on normal-size text.** It fails AA and it is the easiest mistake in this system to make, because `--t3` looks elegant and the failure is invisible to anyone with good eyesight on a good screen. Small *and* faint is the combination that actually hurts: either alone is survivable, together they are not. For meta text on a document — timestamps, captions, footers, table headers — use `--t2`.
+
+**The same trap applies to the semantic colours on their own tints.** `--a` on `--a-bg` measures 4.38:1 and `--g` on `--g-bg` measures 3.97:1 — both fail AA for small text, which is exactly where they get used (callout labels, status pills). The colours are fine for fills, borders and large type; they are not fine for 11–12px labels. Use `--a-text` / `--g-text` there.
+
+Note that a semi-transparent tint must be **composited** onto the page colour before you measure it. Reading the raw `rgba()` and ignoring the alpha compares text against the undiluted colour and produces nonsense — a check that says 1.00:1 is measuring wrong, not finding a catastrophe.
 
 ---
 

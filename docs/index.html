@@ -16,6 +16,9 @@
   --r:#c0392b; --r-bg:rgba(192,57,43,0.07);
   --b:#2563eb; --b-bg:rgba(37,99,235,0.06);
   --a:#b45309; --a-bg:rgba(180,83,9,0.07);
+  /* Small text on a --*-bg tint: the base semantic colours fail WCAG AA there
+     (--a 4.38:1, --g 3.97:1). See "the contrast rule" in design.md. */
+  --a-text:#92400e; --g-text:#146c43;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',-apple-system,sans-serif;
   --mono:'JetBrains Mono','SF Mono','Menlo',monospace;
@@ -30,43 +33,45 @@ body { background:var(--bg); color:var(--t1); font-family:var(--sans); line-heig
 .masthead h1 { font-family:var(--serif); font-size:34px; font-weight:400; letter-spacing:-0.5px; line-height:1.15; }
 .masthead h1 em { font-style:italic; color:var(--t3); }
 .pills { display:flex; gap:8px; flex-wrap:wrap; }
-.pill { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; padding:5px 11px; border-radius:100px; text-decoration:none; border:1px solid var(--bd); background:var(--bg3); color:var(--t2); transition:background .12s; }
+.pill { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; padding:6px 12px; border-radius:100px; text-decoration:none; border:1px solid var(--bd); background:var(--bg3); color:var(--t2); transition:background .12s; }
 .pill:hover { background:var(--bg-hover); }
-.pill-live { background:var(--g-bg); color:var(--g); border-color:rgba(26,135,84,0.2); }
+.pill-live { background:var(--g-bg); color:var(--g-text); border-color:rgba(26,135,84,0.2); }
 
 .lede { font-size:18px; color:var(--t2); margin:24px 0 8px; }
 .lede strong { color:var(--t1); font-weight:600; }
 
 /* Table of contents */
 .toc { background:var(--bg2); border:1px solid var(--bd); border-radius:var(--radius-lg); padding:16px 20px; margin:24px 0; }
-.toc-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--t3); margin-bottom:8px; }
+.toc-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--t2); margin-bottom:8px; }
 .toc ol { margin:0 0 0 18px; }
-.toc li { margin:3px 0; font-size:14px; }
-.toc .t { color:var(--t3); font-family:var(--mono); font-size:11px; }
+.toc li { margin:5px 0; font-size:15px; }
+.toc .t { color:var(--t2); font-family:var(--mono); font-size:12px; }
 
-h2 { font-family:var(--serif); font-size:26px; font-weight:400; letter-spacing:-0.3px; margin:48px 0 4px; padding-top:20px; border-top:1px solid var(--bd); scroll-margin-top:12px; }
-h2 .num { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--t4); display:block; letter-spacing:1px; margin-bottom:2px; }
-h3 { font-size:15px; font-weight:700; margin:26px 0 6px; letter-spacing:-0.1px; }
+h2 { font-family:var(--serif); font-size:28px; font-weight:400; letter-spacing:-0.3px; margin:48px 0 4px; padding-top:20px; border-top:1px solid var(--bd); scroll-margin-top:12px; }
+h2 .num { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--t2); display:block; letter-spacing:1px; margin-bottom:2px; }
+h3 { font-size:17px; font-weight:700; margin:26px 0 6px; letter-spacing:-0.1px; }
 p { margin:12px 0; color:var(--t2); }
 p strong, li strong { color:var(--t1); font-weight:600; }
 ul, ol { margin:12px 0 12px 22px; color:var(--t2); }
 li { margin:6px 0; }
 a { color:var(--b); text-decoration:underline; text-underline-offset:2px; text-decoration-thickness:1px; }
 
-code { font-family:var(--mono); font-size:0.88em; background:var(--bg3); border:1px solid var(--bd); border-radius:4px; padding:1px 5px; color:var(--t1); }
-pre { position:relative; background:var(--bg2); border:1px solid var(--bd); border-radius:var(--radius); padding:14px 16px; margin:12px 0; overflow-x:auto; box-shadow:var(--shadow); }
-pre code { background:none; border:none; padding:0; font-size:12.5px; line-height:1.7; display:block; white-space:pre; }
-pre .cm { color:var(--t3); }
-.copy { position:absolute; top:8px; right:8px; font-family:var(--sans); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--t3); background:var(--bg3); border:1px solid var(--bd); border-radius:100px; padding:3px 9px; cursor:pointer; opacity:0; transition:opacity .12s,color .12s; }
+code { font-family:var(--mono); font-size:0.9em; background:var(--bg3); border:1px solid var(--bd); border-radius:4px; padding:1px 5px; color:var(--t1); }
+pre { position:relative; background:var(--bg2); border:1px solid var(--bd); border-radius:var(--radius); padding:16px 18px; margin:12px 0; overflow-x:auto; box-shadow:var(--shadow); }
+/* 14px per the document scale in design.md: this is the text people retype,
+   so it earns the space. The dashboard scale (12px) is wrong for a document. */
+pre code { background:none; border:none; padding:0; font-size:14px; line-height:1.7; display:block; white-space:pre; }
+pre .cm { color:var(--t2); }
+.copy { position:absolute; top:8px; right:8px; font-family:var(--sans); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--t2); background:var(--bg3); border:1px solid var(--bd); border-radius:100px; padding:4px 11px; cursor:pointer; opacity:0; transition:opacity .12s,color .12s; }
 pre:hover .copy { opacity:1; }
 .copy:hover { color:var(--t1); }
 .copy.done { color:var(--g); border-color:rgba(26,135,84,0.3); background:var(--g-bg); opacity:1; }
 
-.callout { border-left:3px solid var(--a); background:var(--a-bg); border-radius:0 var(--radius) var(--radius) 0; padding:12px 16px; margin:16px 0; }
-.callout .label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--a); }
-.callout p { margin:4px 0 0; color:var(--t2); font-size:14px; }
+.callout { border-left:3px solid var(--a); background:var(--a-bg); border-radius:0 var(--radius) var(--radius) 0; padding:14px 18px; margin:16px 0; }
+.callout .label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--a-text); }
+.callout p { margin:5px 0 0; color:var(--t2); font-size:15px; }
 .callout.key { border-left-color:var(--g); background:var(--g-bg); }
-.callout.key .label { color:var(--g); }
+.callout.key .label { color:var(--g-text); }
 
 .step { display:grid; grid-template-columns:34px 1fr; gap:14px; margin:24px 0; }
 .step-n { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--t1); background:var(--bg3); border:1px solid var(--bd); border-radius:100px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; }
@@ -76,34 +81,36 @@ pre:hover .copy { opacity:1; }
 .files { display:grid; gap:1px; background:var(--bd); border:1px solid var(--bd); border-radius:var(--radius-lg); overflow:hidden; margin:18px 0; }
 .file { background:var(--bg2); padding:14px 18px; }
 .file-top { display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; }
-.file-name { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--t1); }
-.file-open { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; white-space:nowrap; }
-.file p { margin:3px 0 0; font-size:13.5px; }
+.file-name { font-family:var(--mono); font-size:15px; font-weight:700; color:var(--t1); }
+.file-open { font-size:13px; font-weight:600; letter-spacing:0.2px; white-space:nowrap; }
+.file p { margin:4px 0 0; font-size:14.5px; }
 
 details { margin:12px 0; border:1px solid var(--bd); border-radius:var(--radius); background:var(--bg2); overflow:hidden; }
-summary { cursor:pointer; padding:9px 14px; font-size:12px; font-weight:600; color:var(--t2); background:var(--bg3); list-style:none; user-select:none; }
+summary { cursor:pointer; padding:11px 14px; font-size:13.5px; font-weight:600; color:var(--t2); background:var(--bg3); list-style:none; user-select:none; }
 summary::-webkit-details-marker { display:none; }
 summary::before { content:'▸ '; color:var(--t3); }
 details[open] summary::before { content:'▾ '; }
 summary:hover { color:var(--t1); }
 details pre { margin:0; border:none; border-radius:0; box-shadow:none; border-top:1px solid var(--bd); }
 
+/* Document scale, not dashboard scale: 15px cells, 12px headers, and --t2
+   rather than --t3 on the headers (--t3 measures 3.5:1 and fails WCAG AA). */
 table { width:100%; border-collapse:collapse; margin:16px 0; }
-th { background:var(--bg3); border-bottom:2px solid var(--bd2); padding:9px 12px; text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--t3); }
-td { padding:9px 12px; border-bottom:1px solid var(--bd); font-size:13.5px; color:var(--t2); vertical-align:top; }
+th { background:var(--bg3); border-bottom:2px solid var(--bd2); padding:10px 12px; text-align:left; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--t2); }
+td { padding:11px 12px; border-bottom:1px solid var(--bd); font-size:15px; color:var(--t2); vertical-align:top; }
 td:first-child { color:var(--t1); }
 tbody tr:hover { background:var(--bg-hover); }
-table.tt td:first-child { font-family:var(--mono); font-size:12px; }
-table.arch-t td:first-child { font-family:var(--mono); font-size:12px; white-space:nowrap; }
+table.tt td:first-child { font-family:var(--mono); font-size:13.5px; }
+table.arch-t td:first-child { font-family:var(--mono); font-size:13.5px; white-space:nowrap; }
 
 .demo-card { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; background:var(--bg2); border:1px solid var(--bd); border-radius:var(--radius-lg); box-shadow:var(--shadow); padding:18px 20px; margin:20px 0; }
-.demo-card p { margin:2px 0 0; font-size:13.5px; }
-.btn { display:inline-block; background:var(--t1); color:var(--bg2); text-decoration:none; font-size:12px; font-weight:600; letter-spacing:0.3px; padding:9px 16px; border-radius:100px; white-space:nowrap; }
+.demo-card p { margin:3px 0 0; font-size:14.5px; }
+.btn { display:inline-block; background:var(--t1); color:var(--bg2); text-decoration:none; font-size:13.5px; font-weight:600; letter-spacing:0.3px; padding:10px 18px; border-radius:100px; white-space:nowrap; }
 .btn:hover { background:#000; }
 .btn-2 { background:var(--bg3); color:var(--t1); border:1px solid var(--bd2); }
 .btn-2:hover { background:var(--bg-hover); }
 
-footer { margin-top:56px; padding-top:16px; border-top:1px solid var(--bd); font-size:12.5px; color:var(--t3); }
+footer { margin-top:56px; padding-top:16px; border-top:1px solid var(--bd); font-size:14px; color:var(--t2); }
 footer a { color:var(--t2); }
 
 @media (max-width:768px) {

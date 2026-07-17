@@ -13,6 +13,8 @@
   --bd: #e2e0d8; --bd2: #d5d3ca; --bd-strong: #c0beb5;
   --t1: #1a1a18; --t2: #5c5c56; --t3: #8a8a82; --t4: #b0b0a8;
   --g: #1a8754; --g2: #22a366; --g-bg: rgba(26,135,84,0.07);
+  /* small text on a --g-bg tint: --g measures 3.97:1 there and fails WCAG AA */
+  --g-text: #146c43;
   --r: #c0392b; --r2: #e74c3c; --r-bg: rgba(192,57,43,0.07);
   --b: #2563eb; --b2: #3b82f6; --b-bg: rgba(37,99,235,0.06);
   --a: #b45309; --a-bg: rgba(180,83,9,0.07);
@@ -30,8 +32,8 @@ body { background:var(--bg); color:var(--t1); font-family:var(--sans); line-heig
 .masthead h1 { font-family:var(--serif); font-size:32px; font-weight:400; letter-spacing:-0.5px; }
 .masthead h1 em { font-style:italic; color:var(--t3); }
 .pills { display:flex; gap:8px; }
-.pill { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; padding:4px 10px; border-radius:100px; }
-.pill-live { background:var(--g-bg); color:var(--g); border:1px solid rgba(26,135,84,0.2); }
+.pill { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; padding:5px 11px; border-radius:100px; }
+.pill-live { background:var(--g-bg); color:var(--g-text); border:1px solid rgba(26,135,84,0.2); }
 .pill-guide { background:var(--bg3); color:var(--t2); border:1px solid var(--bd); text-decoration:none; }
 .pill-guide:hover { background:var(--bg-hover); color:var(--t1); }
 .pill-date { background:var(--bg3); color:var(--t2); border:1px solid var(--bd); font-family:var(--mono); letter-spacing:0; }
